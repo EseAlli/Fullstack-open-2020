@@ -1,0 +1,14 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_notes_spa
+note over browser:
+after a new note is created
+it is sent/added to the server
+end note
+note over server:
+after the server receives the note, 
+it adds it to the data.json file 
+and sends it back to the browser for display
+end note 
+server-->browser: data.json
+note over browser:
+browser displays the notes
+end note

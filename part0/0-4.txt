@@ -1,0 +1,25 @@
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over browser:
+submitting the form causes altogether five HTTP requests.
+The first one is the form submit event.
+The request causes a url re-direct
+So, the browser reloads the Notes page.
+The reload causes three more HTTP requests: 
+fetching the style sheet (main.css), 
+the JavaScript code (main.js), 
+and the raw data of the notes (data.json).
+end note
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing the js code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: data.json
