@@ -27,7 +27,8 @@ const Content = (props) => {
 
 const Total = (props) => {
   const exercises_total = props.parts.reduce(
-    (item, exec) => item + exec.exercises, 0
+    (item, exec) => item + exec.exercises,
+    0
   );
   return <p>Number of exercises {exercises_total}</p>;
 };
