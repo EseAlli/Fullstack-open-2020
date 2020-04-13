@@ -23,13 +23,20 @@ const App = (props) => {
 
     setVotes(copy);
   };
-  console.log(votes);
+
 
   const mostVotes = () => {
     const MaxValue = votes.indexOf(Math.max(...votes));
     return MaxValue;
   };
 
+  const maxVotes = ( ) => {
+    const maxNum =  Math.max(...votes);
+    return maxNum
+  }
+ 
+ 
+// console.log(votes);
   return (
     <>
       <h1>Anecdote of the day</h1>
@@ -41,7 +48,7 @@ const App = (props) => {
       </div>
       <h1>Anecdote with most votes</h1>
       <div>{anecdotes[mostVotes()]}</div>
-      <p>has {votes[selected]} votes</p>
+      <p>has {maxVotes()} votes</p>
     </>
   );
 };
