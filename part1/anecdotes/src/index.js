@@ -25,20 +25,21 @@ const App = (props) => {
   };
   console.log(votes);
 
-  const mostVotes = () =>{
+  const mostVotes = () => {
     const MaxValue = votes.indexOf(Math.max(...votes));
     return MaxValue;
-  }
+  };
 
   return (
     <>
+      <h1>Anecdote of the day</h1>
       {props.anecdotes[selected]}
       <p>has {votes[selected]} votes</p>
       <div>
         <Button handleclick={random} text="next anecdote" />
         <Button handleclick={vote} text="vote" />
       </div>
-      <h1>most upvoted anecdote</h1>
+      <h1>Anecdote with most votes</h1>
       <div>{anecdotes[mostVotes()]}</div>
     </>
   );
