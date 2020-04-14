@@ -1,1 +1,1 @@
-Solution for exercises 2.6 - 2.10
+Solution for exercises 2.6 - 2.11
