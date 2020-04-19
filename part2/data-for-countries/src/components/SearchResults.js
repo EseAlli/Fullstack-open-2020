@@ -1,6 +1,6 @@
 import React from "react";
 
-const SearchResults = ({ result }) => {
+const SearchResults = ({ results }) => {
   if (results === null) {
     return <p>Which country would you like to find?</p>;
   }

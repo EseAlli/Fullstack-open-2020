@@ -3,6 +3,7 @@ import axios from "axios";
 import Filter from "./components/Filter";
 import SearchResults from "./components/SearchResults";
 import CountryInfo from "./components/CountryInfo";
+import CountryList from "./components/CountryList";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -16,8 +17,12 @@ const App = () => {
   };
   useEffect(hook, []);
 
-  const handleFilterChange = () => {
+  const handleFilterChange = (e) => {
     setFilter(e.target.value.toLowerCase());
+  };
+
+  const handleBtnClick = (e) => {
+    setFilter(e.target.previousSibling.textContent.toLowerCase());
   };
 
   const showResult = () => {
@@ -30,16 +35,18 @@ const App = () => {
       let filteredArr = countries.filter((item) =>
         item.name.toLowerCase().includes(filter)
       );
-
       if (filteredArr.length > 10) {
         result = undefined;
       } else if (filteredArr.length === 1) {
-        result = <CountryData countryData={filteredArr[0]} />;
+        result = <CountryInfo countryInfo={filteredArr[0]} />;
+      } else if (filteredArr.length > 1 && filteredArr.length < 10) {
+        result = (
+          <CountryList
+            countries={filteredArr}
+            handleBtnClick={handleBtnClick}
+          />
+        );
       }
-    } else if (filteredArr.length > 1 && filteredArr.length < 10) {
-      result = (
-        <CountryList countries={filteredArr} handleBtnClick={handleBtnClick} />
-      );
     }
     return result;
   };
@@ -47,7 +54,7 @@ const App = () => {
   return (
     <>
       <Filter onFilterChange={handleFilterChange} />
-      <SearchResults />
+      <SearchResults results={showResult()} />
     </>
   );
 };
