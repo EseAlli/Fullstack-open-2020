@@ -10,9 +10,8 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   const hook = () => {
-    axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
+    axios.get("https://restcountries.com/v2/all").then((response) => {
       setCountries(response.data);
-      console.log(countries);
     });
   };
   useEffect(hook, []);
@@ -20,6 +19,7 @@ const App = () => {
   const handleFilterChange = (e) => {
     setFilter(e.target.value.toLowerCase());
   };
+
 
   const handleBtnClick = (e) => {
     setFilter(e.target.previousSibling.textContent.toLowerCase());
@@ -53,7 +53,7 @@ const App = () => {
 
   return (
     <>
-      <Filter onFilterChange={handleFilterChange} />
+      <Filter onChange={handleFilterChange} />
       <SearchResults results={showResult()} />
     </>
   );
