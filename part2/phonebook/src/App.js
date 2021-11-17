@@ -3,12 +3,15 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import personService from "./services/persons"
+import Notification from "./components/Notification"
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [successMessage, setSuccessMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState('')
 
   const hook = () => {
     personService
@@ -32,6 +35,10 @@ const App = () => {
           setPersons(persons.map(pep=> pep.id !== person.id ? pep : updatePerson))
           setNewName("");
           setNewNumber("");
+          setSuccessMessage(`Updated ${person.name}`)
+          setTimeout(()=>{
+            setSuccessMessage(null)
+          }, 5000)
         })
       }
     }
@@ -45,8 +52,10 @@ const App = () => {
       .create(personObject)
       .then(newPerson=>{
         setPersons(persons.concat(newPerson));
-        setNewName("");
-        setNewNumber("");
+        setSuccessMessage(`Added ${newPerson.name}`)
+        setTimeout(()=>{
+            setSuccessMessage(null)
+        }, 5000)
       })
     }
   };
@@ -68,7 +77,13 @@ const App = () => {
       personService
       .deleteOne(id)
       .then(()=>{
-        hook()
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      .catch(error=>{
+        setErrorMessage(`Information of ${name} has already been removed from the server`)
+        setTimeout(()=>{
+            setErrorMessage(null)
+        }, 5000)
       })
     }
   }
@@ -84,8 +99,8 @@ const App = () => {
 
   return (
     <div>
-      newName
       <h2>Phonebook</h2>
+      <Notification successMessage={successMessage} errorMessage={errorMessage}/>
       <Filter
         filter={filter}
         handleFilterInputChange={handleFilterInputChange}
