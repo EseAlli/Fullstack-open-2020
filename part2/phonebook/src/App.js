@@ -2,52 +2,76 @@ import React, { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
-import axios from "axios";
+import personService from "./services/persons"
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
   const hook = () => {
-    axois.get("http://localhost:3001/persons").then((res) => {
-      setPersons(res.data);
-    });
+    personService
+    .getAll()
+    .then( intialPersons =>{
+      setPersons(intialPersons)
+    })
   };
 
   useEffect(hook, []);
 
   const addPerson = (event) => {
     event.preventDefault();
-    const nameObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    };
-    setPersons(persons.concat(nameObject));
-    setNewName("");
-    setNewNumber("");
+    const person = persons.find(p => p.name === newName)
+    if (person){
+      const changedPerson = {...person, number: newNumber}
+      if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)){
+        personService
+        .update(person.id, changedPerson )
+        .then(updatePerson =>{
+          setPersons(persons.map(pep=> pep.id !== person.id ? pep : updatePerson))
+          setNewName("");
+          setNewNumber("");
+        })
+      }
+    }
+    else{
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1,
+      };
+      personService
+      .create(personObject)
+      .then(newPerson=>{
+        setPersons(persons.concat(newPerson));
+        setNewName("");
+        setNewNumber("");
+      })
+    }
   };
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const handleFilterInputChange = (e) => {
     setFilter(e.target.value);
   };
+
+  const deleteUser = (name,id) =>{
+    if (window.confirm(`Delete ${name} ?`)){
+      personService
+      .deleteOne(id)
+      .then(()=>{
+        hook()
+      })
+    }
+  }
 
   const filterPersons = () => {
     if (filter === "") {
@@ -76,7 +100,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterPersons={filterPersons} />
+      <Persons persons={persons} filterPersons={filterPersons} deletePerson={deleteUser}/>
     </div>
   );
 };
