@@ -75,9 +75,12 @@ const App = () => {
     }
   }
 
-  const deleteBlog = async (id) =>{
-    await blogService.remove(id)
-    setUpdate(true)
+  const deleteBlog = async (blog) =>{
+    const prompt = window.confirm(`Remove ${blog.title} by ${blog.author}`)
+    if (prompt){
+      await blogService.remove(blog.id)
+      setUpdate(true)
+    }
   }
 
   const loginForm = () => (
@@ -100,7 +103,7 @@ const App = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>      
   )
 

@@ -16,7 +16,7 @@ const Blog = ({blog, updateBlog, deleteBlog}) => {
   <div style={blogStyle} className="blog">
         {blog.title} {blog.author}
         <button
-          className="blog-view-btn"
+          id="blog-view"
           onClick={toggleVisibility}
         >
           {visible ? 'hide' : 'show'}
@@ -24,9 +24,9 @@ const Blog = ({blog, updateBlog, deleteBlog}) => {
       { visible &&
         <div>
             <p>{blog.url}</p>
-            <p>{blog.likes} <button onClick={ ()=> updateBlog(blog.id, blog.likes)}>like</button></p>
+            <p>{blog.likes} <button onClick={ ()=> updateBlog(blog.id, blog.likes)} id="like">like</button></p>
             <p>{blog.user ? blog.user.name : ""}</p>
-            <button onClick={ ()=> deleteBlog(blog.id)}>remove</button> 
+            <button onClick={ ()=> deleteBlog(blog)}>remove</button> 
         </div>
       }
   </div>  
