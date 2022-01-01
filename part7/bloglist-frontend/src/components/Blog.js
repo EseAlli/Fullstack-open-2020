@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-const Blog = ({blog, updateBlog, deleteBlog}) => {
+const Blog = ({ blog, updateBlog, deleteBlog}) => {
   const [visible,setVisible] =useState(false)
   const toggleVisibility = () => {
     setVisible(!visible)

@@ -5,23 +5,21 @@ import loginService from './services/login'
 import Notification from "./components/Notifications"
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {setNotification} from './reducers/notificationReducer'
+import { intialBlog, likeBlog } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [update, setUpdate] = useState(false)
   const dispatch = useDispatch()
 
   const blogFormRef = useRef()
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [update])
+    dispatch(intialBlog()) 
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('blogUser')
@@ -49,10 +47,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      // setErrorMessage('Wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 3000)
+      dispatch(setNotification('Wrong credentials', 5))
     }
   }
 
@@ -62,22 +57,17 @@ const App = () => {
       let {title, author} = created
       blogFormRef.current.toggleVisibility()
       dispatch(setNotification(`A new blog ${title} by ${author} added`, 5))
-      setBlogs(blogs.concat(created))
     }
   }
 
   const updateBlog = async (id, likes) =>{
-    const updated = await blogService.update(id, { likes:likes+1})
-    if (updated){
-      setUpdate(true)
-    }
+    dispatch(likeBlog(id, likes))
   }
 
   const deleteBlog = async (blog) =>{
     const prompt = window.confirm(`Remove ${blog.title} by ${blog.author}`)
     if (prompt){
       await blogService.remove(blog.id)
-      setUpdate(true)
     }
   }
 
