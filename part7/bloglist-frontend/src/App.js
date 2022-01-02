@@ -7,7 +7,7 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import {useDispatch, useSelector} from 'react-redux'
 import {setNotification} from './reducers/notificationReducer'
-import { intialBlog, likeBlog } from './reducers/blogReducer'
+import { intialBlog, likeBlog, deleteBlog } from './reducers/blogReducer'
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -67,7 +67,7 @@ const App = () => {
   const deleteBlog = async (blog) =>{
     const prompt = window.confirm(`Remove ${blog.title} by ${blog.author}`)
     if (prompt){
-      await blogService.remove(blog.id)
+      dispatch(deleteBlog(blog.id))
     }
   }
 
