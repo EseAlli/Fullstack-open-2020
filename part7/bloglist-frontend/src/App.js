@@ -64,7 +64,7 @@ const App = () => {
     dispatch(likeBlog(id, likes))
   }
 
-  const deleteBlog = async (blog) =>{
+  const deleteABlog = async (blog) =>{
     const prompt = window.confirm(`Remove ${blog.title} by ${blog.author}`)
     if (prompt){
       dispatch(deleteBlog(blog.id))
@@ -109,7 +109,7 @@ const App = () => {
   const blogList = () => (
     blogs.sort((a, b) => (a.likes > b.likes ? -1 : 1)) &&
       blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteABlog}/>
       ))
   )
 

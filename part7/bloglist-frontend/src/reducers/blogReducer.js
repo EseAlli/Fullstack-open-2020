@@ -27,8 +27,7 @@ export const likeBlog = (id, likes ) =>{
 
 export const deleteBlog = (id) =>{
     return async dispatch =>{
-        console.log(id)
-        await blogService.deleteBlog({id})
+        await blogService.remove(id)
         dispatch({
             type: 'DELETE_BLOG',
             data: {id}
