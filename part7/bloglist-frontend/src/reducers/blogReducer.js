@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import { setNotification } from './notificationReducer'
 export const intialBlog  =  () =>{
     return async dispatch =>{
         const blogs = await blogService.getAll()
@@ -8,6 +9,17 @@ export const intialBlog  =  () =>{
         })
     }
 }
+
+export const createBlog = (blogObject) => {
+    return async (dispatch) => {
+      const newBlog = await blogService.create(blogObject)
+      dispatch({
+        type: 'NEW_BLOG',
+        data: newBlog,
+      })
+      dispatch(setNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`, 5))
+    }
+  }
 
 export const likeBlog = (id, likes ) =>{
     return async dispatch =>{
@@ -39,6 +51,8 @@ const reducer = (state= [], action) =>{
     switch(action.type){
         case 'INIT_BLOGS':
             return action.data
+        case 'NEW_BLOG': 
+            return [...state, action.data]
         case 'LIKE_BLOG':
             return state.map((blog) =>
                 blog.id === action.data.id

@@ -1,63 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login' 
 import Notification from "./components/Notifications"
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import {useDispatch, useSelector} from 'react-redux'
-import {setNotification} from './reducers/notificationReducer'
-import { intialBlog, likeBlog, deleteBlog } from './reducers/blogReducer'
+import { intialBlog, likeBlog, deleteBlog, createBlog } from './reducers/blogReducer'
+import {login, setUser, logout} from './reducers/userReducer'
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const blogFormRef = useRef()
   useEffect(() => {
-    dispatch(intialBlog()) 
+    dispatch(setUser())
   }, [dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('blogUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
+    dispatch(intialBlog()) 
+  }, [dispatch])
   
   const handleLogin = async (event) => {
     event.preventDefault()
-    
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem(
-        'blogUser', JSON.stringify(user)
-      ) 
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      dispatch(setNotification('Wrong credentials', 5))
-    }
+    const user = { username, password}
+    dispatch(login(user))
+    setUsername('')
+    setPassword('')
   }
 
   const addBlog = async (newBlog) =>{
-    const created = await blogService.create(newBlog)
-    if (created) {
-      let {title, author} = created
-      blogFormRef.current.toggleVisibility()
-      dispatch(setNotification(`A new blog ${title} by ${author} added`, 5))
-    }
+    blogFormRef.current.toggleVisibility()
+    dispatch(createBlog(newBlog))
   }
 
   const updateBlog = async (id, likes) =>{
@@ -96,8 +72,7 @@ const App = () => {
   )
 
   const logOut = () =>{
-    loginService.logout()
-    setUser(null)
+    dispatch(logout())
   }
 
   const blogForm = () => (
@@ -127,6 +102,7 @@ const App = () => {
       {
         user !== null ? blogList() : '' 
       }
+      
     </div>
   )
 }
